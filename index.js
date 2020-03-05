@@ -1,15 +1,15 @@
-const fs = require("fs");
-const Discord = require("discord.js");
+const fs = require('fs');
+const Discord = require('discord.js');
 
-const { token, prefix } = require("./config.json");
+const { token, prefix } = require('./config.json');
 
 // instantiate new discord client
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
 const commandFiles = fs
-  .readdirSync("./src/commands")
-  .filter(file => file.endsWith(".js"));
+  .readdirSync('./src/commands')
+  .filter(file => file.endsWith('.js'));
 
 //
 for (const file of commandFiles) {
@@ -21,13 +21,13 @@ for (const file of commandFiles) {
 }
 
 // starting message
-client.once("ready", () => {
-  console.log("Listening...");
+client.once('ready', () => {
+  console.log('Listening...');
 });
 
-client.on("message", message => {
+client.on('message', message => {
   // if message doesn't begin with prefix, or message author is bot
-  const args = message.content.slice(prefix.length).split(" ");
+  const args = message.content.slice(prefix.length).split(' ');
   // takes prefix and removes it from string, gets only the command
   const command = args.shift().toLowerCase();
 
@@ -37,7 +37,7 @@ client.on("message", message => {
   } catch (error) {
     console.error(error);
     message.reply(
-      "There was an error trying to execute that command, sorry :("
+      'There was an error trying to execute that command, sorry :('
     );
   }
 });
