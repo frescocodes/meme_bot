@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 const siteURL = 'https://www.worldometers.info/coronavirus/';
 
-const scrape = async url => {
+const scrape = async (url, message) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
@@ -30,24 +30,22 @@ const scrape = async url => {
   const recovered = await el3.getProperty('textContent');
   const recoveredRaw = await recovered.jsonValue();
 
+  message.edit(
+    `Here are the latest Coronavirus statistics:\n**Infected:** ${infectedRaw}\n**Deaths:** ${deathsRaw}\n**Recovered:** ${recoveredRaw}`
+  );
+
   browser.close();
 
   return { infectedRaw, deathsRaw, recoveredRaw };
 };
 
-scrape(siteURL);
-
 module.exports = {
   name: 'corona',
   description: 'Get lates stats on the Corona Virus',
   async execute(message, args) {
-    message.channel.send('Fetching latest Coronavirus results...').then(msg => {
-      setTimeout(() => {
-        msg.edit(
-          `Here are the latest Coronavirus statistics:\n**Infected:** ${results.infectedRaw}\n**Deaths:** ${results.deathsRaw}\n**Recovered:** ${results.recoveredRaw}`
-        );
-      }, 20000);
-    });
-    const results = await scrape(siteURL);
+    const initial = await message.channel.send(
+      'Fetching latest Coronavirus results...'
+    );
+    scrape(siteURL, initial);
   },
 };
